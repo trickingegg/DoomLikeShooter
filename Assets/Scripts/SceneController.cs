@@ -6,7 +6,24 @@ public class SceneController : MonoBehaviour
 {
     [SerializeField] private GameObject enemyPrefab;
     private GameObject _enemy;
-    
+    public float speed = 3.0f;
+    public const float baseSpeed = 3.0f;
+
+    void Awake()
+    {
+        Messenger<float>.AddListener(GameEvent.SPEED_CHANGED, OnSpeedChanged);
+    }
+
+    void OnDestroy()
+    {
+        Messenger<float>.RemoveListener(GameEvent.SPEED_CHANGED, OnSpeedChanged);
+    }
+
+    private void OnSpeedChanged(float value)
+    {
+        speed = baseSpeed * value;
+    }
+
     void Start()
     {
         

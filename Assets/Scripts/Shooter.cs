@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Shooter : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class Shooter : MonoBehaviour
     {
         _camera = GetComponent<Camera>();
 
-        Cursor.lockState = CursorLockMode.Locked; //Hide Cursor
+        //Cursor.lockState = CursorLockMode.Locked; //Hide Cursor
         Cursor.visible = false;
     }
 
@@ -25,7 +26,8 @@ public class Shooter : MonoBehaviour
     
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) //reaction to mouse click
+        if (Input.GetMouseButtonDown(0) &&
+            !EventSystem.current.IsPointerOverGameObject()) //reaction to mouse click
         {
             Vector3 point = new Vector3(
                 _camera.pixelWidth / 2, _camera.pixelHeight / 2, 0);
@@ -38,6 +40,7 @@ public class Shooter : MonoBehaviour
                 if (target != null)
                 {
                     target.ReactToHit();
+                    Messenger.Broadcast(GameEvent.ENEMY_HIT);
                 }
                 else
                 {
