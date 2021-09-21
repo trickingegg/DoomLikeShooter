@@ -7,34 +7,13 @@ public class SettingsPopup : MonoBehaviour
 {
     [SerializeField] private Slider speedSlider;
 
-    public void Open()
-    {
-        gameObject.SetActive(true);
-    }
+    void Start() => speedSlider.value = PlayerPrefs.GetFloat("speed", 1);
 
-    public void Close()
-    {
-        gameObject.SetActive(false);
-    }
+    public void Open() => gameObject.SetActive(true);
 
-    public void OnSubmitName(string name)
-    {
-        Debug.Log(name);
-    }
+    public void Close() => gameObject.SetActive(false);
 
-    public void OnSpeedValue(float speed)
-    {
-        Messenger<float>.Broadcast(GameEvent.SPEED_CHANGED, speed);
-    }
+    public void OnSubmitName(string name) => Debug.Log(name);
 
-    void Start()
-    {
-        speedSlider.value = PlayerPrefs.GetFloat("speed", 1);
-    }
-
-    
-    void Update()
-    {
-        
-    }
+    public void OnSpeedValue(float speed) => Messenger<float>.Broadcast(GameEvent.SPEED_CHANGED, speed);
 }
