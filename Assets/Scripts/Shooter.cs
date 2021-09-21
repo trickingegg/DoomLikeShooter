@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+[RequireComponent(typeof(Camera))]
 public class Shooter : MonoBehaviour
 {
     private Camera _camera;
@@ -10,7 +11,6 @@ public class Shooter : MonoBehaviour
     void Start()
     {
         _camera = GetComponent<Camera>();
-
         //Cursor.lockState = CursorLockMode.Locked; //Hide Cursor
         Cursor.visible = false;
     }
@@ -23,14 +23,12 @@ public class Shooter : MonoBehaviour
         GUI.Label(new Rect(posX, posY, size, size), "+"); //GUI.Label shows symbol on screen
     }
 
-    
     void Update()
     {
         if (Input.GetMouseButtonDown(0) &&
             !EventSystem.current.IsPointerOverGameObject()) //reaction to mouse click
         {
-            Vector3 point = new Vector3(
-                _camera.pixelWidth / 2, _camera.pixelHeight / 2, 0);
+            Vector3 point = new Vector3(_camera.pixelWidth / 2, _camera.pixelHeight / 2, 0);
             Ray ray = _camera.ScreenPointToRay(point); //create ray in the middle of screen
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
@@ -43,10 +41,7 @@ public class Shooter : MonoBehaviour
                     Messenger.Broadcast(GameEvent.ENEMY_HIT);
                 }
                 else
-                {
                     StartCoroutine(SphereIndicator(hit.point)); //start the program in respponse to hit
-                }
-                
             }
         }
     }
@@ -54,9 +49,7 @@ public class Shooter : MonoBehaviour
     {
         GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         sphere.transform.position = pos;
-
         yield return new WaitForSeconds(1);
-
         Destroy(sphere);
     }
 }

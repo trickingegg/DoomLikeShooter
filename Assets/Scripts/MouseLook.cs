@@ -2,58 +2,55 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum RotationAxes
+{
+    MouseXAndY = 0,
+    MouseX = 1,
+    MouseY = 2
+}
+
+[RequireComponent(typeof(Rigidbody))]
 public class MouseLook : MonoBehaviour
 {
-    public enum RotationAxes
-    {
-        MouseXAndY = 0,
-        MouseX = 1,
-        MouseY = 2
-    }
-    public RotationAxes axes = RotationAxes.MouseXAndY;
+    public RotationAxes _axes = RotationAxes.MouseXAndY;
 
-    public float sensivityHor = 9.0f;
-    public float sensivityVert = 9.0f;
+    public float SensivityHor = 9.0f;
+    public float SensivityVert = 9.0f;
+    public float MinVert = -45.0f;
+    public float MaxVert = 45.0f;
 
-    public float minVert = -45.0f;
-    public float maxVert = 45.0f;
-
-    private float _rotationX = 0;
+    private float RotationX = 0;
     void Start()
     {
         Rigidbody body = GetComponent<Rigidbody>();
         if (body != null)
             body.freezeRotation = true;
     }
-
     
     void Update()
     {
-        if (axes == RotationAxes.MouseX)
-        {
-            //horizontal spin
-            transform.Rotate(0, Input.GetAxis("Mouse X") * sensivityHor, 0);
-        }
-        else if (axes == RotationAxes.MouseY)
+        if (_axes == RotationAxes.MouseX)
+            transform.Rotate(0, Input.GetAxis("Mouse X") * SensivityHor, 0); //horizontal spin
+        else if (_axes == RotationAxes.MouseY)
         {
             //vertical spin
-            _rotationX -= Input.GetAxis("Mouse Y") * sensivityVert; //increase vertical rotation angle accordingly to mouse movement
-            _rotationX = Mathf.Clamp(_rotationX, minVert, maxVert); // fixating the angle with the range of min & max
+            RotationX -= Input.GetAxis("Mouse Y") * SensivityVert; //increase vertical rotation angle accordingly to mouse movement
+            RotationX = Mathf.Clamp(RotationX, MinVert, MaxVert); // fixating the angle with the range of min & max
 
             float rotationY = transform.localEulerAngles.y; // save angle without horiz rotation
 
-            transform.localEulerAngles = new Vector3(_rotationX, rotationY, 0); // create new vector from saved rotation data
+            transform.localEulerAngles = new Vector3(RotationX, rotationY, 0); // create new vector from saved rotation data
         }
         else
         {
             //combined
-            _rotationX -= Input.GetAxis("Mouse Y") * sensivityVert;
-            _rotationX = Mathf.Clamp(_rotationX, minVert, maxVert);
+            RotationX -= Input.GetAxis("Mouse Y") * SensivityVert;
+            RotationX = Mathf.Clamp(RotationX, MinVert, MaxVert);
 
-            float delta = Input.GetAxis("Mouse X") * sensivityHor; //amount of change in rotation angle
+            float delta = Input.GetAxis("Mouse X") * SensivityHor; //amount of change in rotation angle
             float rotationY = transform.localEulerAngles.y + delta; //increment the angle with delta
 
-            transform.localEulerAngles = new Vector3(_rotationX, rotationY, 0);
+            transform.localEulerAngles = new Vector3(RotationX, rotationY, 0);
         }
     }
 }

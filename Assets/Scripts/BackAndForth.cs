@@ -4,32 +4,24 @@ using UnityEngine;
 
 public class BackAndForth : MonoBehaviour
 {
-    public float speed = 3.0f;
-    public float maxZ = 16.0f;
-    public float minZ = -16.0f;
+    private int Direction = 1;
 
-    private int _direction = 1;
+    public float Speed = 3.0f;
+    public float MaxZ = 16.0f;
+    public float MinZ = -16.0f;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
     void Update()
     {
-        transform.Translate(0, 0, _direction * speed * Time.deltaTime);
-
+        transform.Translate(0, 0, Direction * Speed * Time.deltaTime);
         bool bounced = false;
-        if (transform.position.z > maxZ || transform.position.z < minZ)
+        if (transform.position.z > MaxZ || transform.position.z < MinZ)
         {
-            _direction = -_direction;
+            Direction = -Direction;
             bounced = true;
         }
+        
         if (bounced)
-        {
-            transform.Translate(0, 0, _direction * speed * Time.deltaTime);
-        }
+            transform.Translate(0, 0, Direction * Speed * Time.deltaTime);
     }
 }
